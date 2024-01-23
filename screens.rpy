@@ -98,6 +98,9 @@ style frame:
 screen say(who, what):
     style_prefix "say"
 
+    if not config.skipping and what:
+        on 'hide' action Play("sound", "type3.mp3")
+
     window:
         id "window"
 
@@ -115,6 +118,7 @@ screen say(who, what):
     ## phone variant - there's no room.
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0
+
 
 
 ## Make the namebox available for styling through the Character object.
@@ -558,7 +562,7 @@ screen about():
             if gui.about:
                 text "[gui.about!t]\n"
 
-            text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]\n\nMusic from Uppbeat:\n{a=https://uppbeat.io/t/yokonap/airplane-mode}Main Menu{/a} (Airplane Mode, Yokonap)\n{a=https://uppbeat.io/t/ra/cold-brew}Main Game{/a} (Cold Brew, RA)\n\nSound effects from Freesound:\n{a=https://freesound.org/people/kwahmah_02/sounds/250629/}Alarm Clock{/a} (kwahmah_02)")
+            text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]\n\nMusic from Uppbeat:\n{a=https://uppbeat.io/t/yokonap/airplane-mode}Main Menu{/a} (Airplane Mode, Yokonap)\n{a=https://uppbeat.io/t/ra/cold-brew}Main Game{/a} (Cold Brew, RA)\n\nSound effects:\n{a=https://freesound.org/people/kwahmah_02/sounds/250629/}Alarm Clock{/a} (kwahmah_02)]\n{a=https://pixabay.com/sound-effects/analog-appliance-button-10-185285/}Button click SFX{/a} (floraphonic)")
 
 
 style about_label is gui_label
@@ -761,7 +765,7 @@ screen preferences():
 
                     bar value Preference("text speed")
 
-                    label _("Auto-Forward Time")
+                    label _("Auto-advance Speed")
 
                     bar value Preference("auto-forward time")
 
@@ -1264,7 +1268,8 @@ screen notify(message):
     frame at notify_appear:
         text "[message!tq]"
 
-    timer 3.25 action Hide('notify')
+    ## Edited so my_notify works faster.
+    timer 1.5 action Hide('notify')
 
 
 transform notify_appear:
@@ -1286,6 +1291,13 @@ style notify_frame:
 
 style notify_text:
     properties gui.text_properties("notify")
+
+## Adapted function from online tutorial allows notifications to be queued.
+screen my_notify(messages):
+    
+    for n, i in enumerate(messages):        
+        timer max(0.01,n*2) action Notify(i)
+    timer len(messages)*1.5 action Hide('my_notify')
 
 
 ## NVL screen ##################################################################

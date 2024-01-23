@@ -71,7 +71,7 @@ define config.main_menu_music = "airplanemode.mp3"
 ## transition should be used.
 
 ## Entering or exiting the game menu.
-
+## Edited by Valerie from dissolve into fade
 define config.enter_transition = fade
 define config.exit_transition = fade
 
