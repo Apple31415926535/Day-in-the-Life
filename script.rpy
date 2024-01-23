@@ -6,6 +6,8 @@ define v = Character("Valerie", who_color = "#ffffff")
 define dad = Character("Dad")
 define mom = Character("Mom")
 define cm = Character("Classmate")
+define s = Character("Siya")
+define gg = Character("GeoGuessr")
 define c = Character("Mr. Cross", who_color = "#057536")
 define w = Character("Mr. Wordley", who_color = "#7d490a")
 define d = Character("Mr. Delva", who_color = "#752b5f")
@@ -16,7 +18,7 @@ define p = Character("Mme. Penny", who_color = "#476fff")
 # credits for sound effects (done)
 # edit save screen (halfway done - fix scroll bars and volume)
 # change name colours to be visible (done)
-# change quick menu
+# change quick menu (done)
 # change game icon (done)
 # button click sound effects (done)
 
@@ -51,6 +53,7 @@ label start:
     $ physicsq = False
     $ headache = False
     $ techflags = 0
+    $ geopoints = 0
     
     ## Fun little easter egg—if player wakes up late, morningtime will be set to a later time.
     $ morningtime = "6:30 AM"
@@ -87,6 +90,7 @@ label start:
             "Get up.":
                 $ Mental += 3
                 $ Physical += -1 
+                call minlimit
                 show screen my_notify(["Physical stress -1: " + str(Physical), "Mental stress +3: " + str(Mental)])
                 jump awake 
             "Don't get up.":
@@ -102,8 +106,8 @@ label start:
                     "No, really, get up.":
                         $ Physical += -1
                         $ Mental += 4
-                        show screen my_notify(["Physical stress -1: " + str(Physical), "Mental stress +4: " + str(Mental)])
                         call minlimit
+                        show screen my_notify(["Physical stress -1: " + str(Physical), "Mental stress +4: " + str(Mental)])
                         if latechance % 2 == 0:
                             $ late = True
 
@@ -113,8 +117,8 @@ label start:
                         stop sound
                         $ Mental += -2
                         $ Physical += 2
-                        show screen my_notify(["Physical stress +2: " + str(Physical), "Mental stress -2: " + str(Mental)])
                         call minlimit
+                        show screen my_notify(["Physical stress +2: " + str(Physical), "Mental stress -2: " + str(Mental)])
                         v "Zzz... zzz..."
                         "..."
                         "..."
@@ -224,19 +228,13 @@ label start:
             jump morningroutine
 
         label dreamjournal:
-            $ dream = True
-                
-            $ coinflip = renpy.random.randint(2,3)
+        
 
             v "I had a really weird dream last night."
             v "What was it about again...?"
             menu dreamchoices:
                 "A death game.":
-                    if coinflip % 2 == 1: 
-                        $ Mental -= 10 
-                        call minlimit
-                    else:
-                        $ Mental += 5
+                    
                     v "Oh yeah, that's right..."
                     v "There were 50 children on a hill who wouldn't behave while playing, and got punished as a result."
                     v "They were struck by a plague that caused them all to rip each other apart while they suffered internal bleeding."
@@ -245,11 +243,7 @@ label start:
                     v "I'll write it down in my Google Sheet for dreams."
                     v "I think more people should write about their dreams. It's kinda fun to look back on what I was dreaming about a few months ago and wonder what my consciousness was up to."
                 "A test.":
-                    if coinflip % 2 == 1: 
-                        $ Mental -= 10 
-                        call minlimit
-                    else:
-                        $ Mental += 5
+                    
                     v "Oh... yeah, that's right..."
                     v "Can't stop thinking about school even in my dreams, I guess."
                     v "That leaves a pretty awful taste in my mouth..."
@@ -260,11 +254,7 @@ label start:
                     v "I'll write it down in my Google Sheet for dreams, anyway."
                     v "I think more people should write about their dreams. It's kinda fun to look back on what I was dreaming about a few months ago and wonder what my consciousness was up to."
                 "A love story.":
-                    if coinflip % 2 == 1: 
-                        $ Mental -= 10 
-                        call minlimit
-                    else:
-                        $ Mental += 5
+                    
                     v "Mmm... yeah, that's right."
                     v "I think I was helping one of my classmates get together with someone?"
                     v "It felt like a fairytale-like environment, though."
@@ -273,14 +263,14 @@ label start:
                     v "It's such an effective form of escapism, though."
                     v "I'll write it down in my Google Sheet for dreams, anyway."
                     v "I think more people should write about their dreams. It's kinda fun to look back on what I was dreaming about a few months ago and wonder what my consciousness was up to."
-            $renpy.notify("Mental stress: " + str(Mental))
+            
             jump morningroutine
 
         label eatfood:
             $ food = True
             $ Physical -= 2
-            $renpy.notify("Physical stress -2: " + str(Physical))
             call minlimit
+            $renpy.notify("Physical stress -2: " + str(Physical))
             if sick:
                 $ Physical += 1
                 v "My tummy hurts..."
@@ -328,8 +318,8 @@ label start:
             "Take my phone out.":
                 $ Physical += 1
                 $ Social -= 1
-                show screen my_notify(["Physical stress +1: " + str(Physical), "Social stress -1: " + str(Social)])
                 call minlimit
+                show screen my_notify(["Physical stress +1: " + str(Physical), "Social stress -1: " + str(Social)])
                 v "I scroll mindlessly through social media."
                 v "I guess now is a good time to start replying to all the messages I was ignoring yesterday."
                 v "As the kind and sociable friend that I am, I reply to all my texts curtly and leave little room for extended conversation."
@@ -364,8 +354,8 @@ label start:
             menu:
                 "I'll go sit in the atrium with friends.":
                     $ Social -= 2
-                    $renpy.notify("Social stress -2: " + str(Social))
                     call minlimit
+                    $renpy.notify("Social stress -2: " + str(Social))
                     scene atrium
                     v "Since I've got the time, I might as well say hi to my friends."
                     v "We greet each other as they make room for me to take a seat."
@@ -379,8 +369,8 @@ label start:
                 "I'll go to class.":
                     $ Social += 1
                     $ Mental -= 1
-                    show screen my_notify(["Social stress +1: " + str(Social), "Mental stress -1: " + str(Mental)])
                     call minlimit
+                    show screen my_notify(["Social stress +1: " + str(Social), "Mental stress -1: " + str(Mental)])
 
                     v "I'm too tired to talk to people right now."
                     v "I'll wait until I'm awake enough to behave like an actual person to talk to my friends."
@@ -442,8 +432,8 @@ label start:
                     v "Good enough to make a bad day just a little better."
                 else: 
                     $ Mental -= 1
-                    $renpy.notify("Mental stress -1: " + str(Mental))
                     call minlimit 
+                    $renpy.notify("Mental stress -1: " + str(Mental))
                     v "..."
                     v "..."
                     v "...?"
@@ -725,6 +715,7 @@ label start:
 
     label atriumlunch:
         $ Physical -= 3
+        call minlimit
         $renpy.notify("Physical stress -3: " + str(Physical))
         v "Yeah, I think I'll skip on my clubs today..."
         v "It's not like I can eat in the science lab, and I always forget to eat during math club."
@@ -817,6 +808,7 @@ label start:
     
     label scienceclub:
         $ Social -= 3
+        call minlimit
         $renpy.notify("Social stress -3: " + str(Social))
         v "Mhmm..."
         v "As part of the newly-formed Science Club exec team, it's my obligation to attend every meeting!"
@@ -826,13 +818,13 @@ label start:
         v "There, I greet my favourite Science Club president..."
         menu importantchoice:
             "Siya, of course!":
-                v "Hi Siya!!!"
-                v "You are so cool and awesome!!!"
-                v "I love you so much."
+                v "\"Hi Siya!!!\""
+                v "\"You are so cool and awesome!!!\""
+                v "\"I love you so much.\""
             "Arzoi, naturally!":
-                v "Hi Arzoi!!!"
-                v "You are so cool and awesome!!!"
-                v "I love you so much."
+                v "\"Hi Arzoi!!!\""
+                v "\"You are so cool and awesome!!!\""
+                v "\"I love you so much.\""
         v "I exchange greetings with everyone else too, of course."
         v "We might be a newly established club, but that just means that we're all very close with each other."
         v "Today's meeting is, as determined by popular vote, another GeoGuessr meeting!"
@@ -841,60 +833,445 @@ label start:
         v "Granted, it might be more appropriate to call myself her saboteur, considering how many times I've misled her from her original guess."
         v "It might be easier this time, though! For our warm-up session, we're just going over famous cities, so it can't be that hard."
         show geoguessr paris 
+        window hide
         $renpy.pause(2.0)
+        window show
         menu paris:
             "Hmm, this looks like it's in..."
 
-            "Asia.":
+            "Asia":
                 v "Yeah, sounds about right."
                 v "\"How about Asia?\""
-                "Siya" "???"
-                "Siya" "\"Okay Valerie, I trust you...\""
-                "GeoGuessr" "Wrong! Paris!"
+                s "???"
+                s "\"Okay Valerie, I trust you...\""
+                gg "Wrong! Paris!"
 
-            "North America.":
+            "North America":
                 v "Yeah, sounds about right."
                 v "\"How about North America?\""
-                "Siya" "???"
-                "Siya" "\"Okay Valerie, I trust you...\""
-                "GeoGuessr" "Wrong! Paris!"
+                s "???"
+                s "\"Okay Valerie, I trust you...\""
+                gg "Wrong! Paris!"
 
-            "South America.":
+            "South America":
                 v "Yeah, sounds about right."
                 v "\"How about South America?\""
-                "Siya" "???"
-                "Siya" "\"Okay Valerie, I trust you...\""
-                "GeoGuessr" "Wrong! Paris!"
+                s "???"
+                s "\"Okay Valerie, I trust you...\""
+                gg "Wrong! Paris!"
 
             "Australia":
                 v "Yeah, sounds about right."
                 v "\"How about Australia?\""
-                "Siya" "???"
-                "Siya" "\"Okay Valerie, I trust you...\""
-                "GeoGuessr" "Wrong! Paris!"
+                s "???"
+                s "\"Okay Valerie, I trust you...\""
+                gg "Wrong! Paris!"
             
             "Europe":
                 v "Yeah, sounds about right."
                 v "\"How about Europe?\""
-                "Siya" "Hmm..."
-                "Siya" "\"Okay Valerie, I trust you...\""
-                "Siya" "\"Where in Europe?\""
-                menu paris:
+                s "Hmm..."
+                s "\"Okay Valerie, I trust you...\""
+                s "\"Where in Europe?\""
+                menu paris2:
+                    "Italy":
+                        gg "Wrong! Paris!"
+                        $ geopoints += 1       
+                    "Germany":
+                        gg "Wrong! Paris!"
+                        $ geopoints += 1
+                    "United Kingdom":
+                        gg "Wrong! Paris!"
+                        $ geopoints += 1
                     "France":
-                        "Siya" "\"Sounds reasonable...\""
-                        "Siya" "\"Where in France?\""
-                        
-
+                        s "\"Sounds reasonable...\""
+                        s "\"Where in France?\""
+                        menu paris3:
+                            "Paris":
+                                gg "Good job! You were right!"
+                                s "Yay! Good job, Valerie!"
+                                $ geopoints += 5
+                            "Marseille":
+                                gg "Wrong! Paris!"
+                                $ geopoints += 3
+                            "Lyon":
+                                gg "Wrong! Paris!"
+                                $ geopoints +=3
+                            "Toulouse":
+                                gg "Wrong! Paris!"
+                                $ geopoints += 3
             "Africa":
+                v "Yeah, sounds about right."
+                v "\"How about Africa?\""
+                s "???"
+                s "\"Okay Valerie, I trust you...\""
+                gg "Wrong! Paris!"
 
+        if geopoints == 5:
+            v "You know what, not a bad first round from me!!"
+            v "Maybe I'm not as bad as I thought I would be."
+            v "It looks like Siya feels the same. Maybe she's starting to trust me again after I failed her royally at our last meeting..."
+        elif 1 <= geopoints <= 3:
+            v "Uhh... could've been worse?"
+        else: 
+            v "Oops."
+            s "\"Valerie! I trusted you!\""
+            v "..."
+            v "\"Teehee?\""
+            v "Ahem. Next round!!"
 
+        label losangeles:
+            show geoguessr los angeles 
+            window hide
+            $renpy.pause(2.0)
+            window show
+            menu losang:
+                "Hmm, this looks like it's in..."
 
+                "Asia":
+                    v "Yeah, sounds about right."
+                    v "\"How about Asia?\""
+                    s "???"
+                    if geopoints == 5:
+                        s "\"Okay Valerie...\""
+                    else:
+                        s "\"Sure...\""
+                    gg "Wrong! Los Angeles!"
 
+                "North America":
+                    v "Yeah, sounds about right."
+                    v "\"How about North America?\""
+                    s "\"Okay Valerie, I trust you...\""
+                    s "\"Where in North America?\""
+                    
+                    menu losang2:
+                        "Canada":
+                            $ geopoints += 1
+                            gg "Wrong! Los Angeles!"
+                        "United States":
+                            s "\"Hmm, okay.\""
+                            s "\"Where in the United States?\""
+                            menu losang3:
+                                "New York":
+                                    $ geopoints += 3
+                                    gg "Wrong! Los Angeles!"
 
+                                "Los Angeles":
+                                    $ geopoints += 5
+                                    gg "Good job! You were right!"
+                                    if geopoints == 10:
+                                        s "\"Wow Valerie, you've really improved since last week!\""
+                                        s "\"I can almost forgive you for how you've wronged me!\""
+                                    else:
+                                        s "\"Congrats us! Maybe we'll place 2nd from last place this time!\""    
+                                "Chicago":
+                                    $ geopoints += 3
+                                    gg "Wrong! Los Angeles!"
+                        "Mexico":
+                            $ geopoints += 1
+                            gg "Wrong! Los Angeles!"
+
+                "South America":
+                    v "Yeah, sounds about right."
+                    v "\"How about South America?\""
+                    s "???"
+                    if geopoints == 5:
+                        s "\"Okay Valerie...\""
+                    else:
+                        s "\"Sure...\""
+                    gg "Wrong! Los Angeles!"
+
+                "Australia":
+                    v "Yeah, sounds about right."
+                    v "\"How about Australia?\""
+                    s "???"
+                    if geopoints == 5:
+                        s "\"Okay Valerie...\""
+                    else:
+                        s "\"Sure...\""
+                    gg "Wrong! Los Angeles!"
+                
+                "Europe":
+                    v "Yeah, sounds about right."
+                    v "\"How about Europe?\""
+                    s "Hmm..."
+                    if geopoints == 5:
+                        s "\"Okay Valerie...\""
+                    else:
+                        s "\"Sure...\""
+                    gg "Wrong! Los Angeles!"
+                
+                "Africa":
+                    v "Yeah, sounds about right."
+                    v "\"How about Africa?\""
+                    s "???"
+                    if geopoints == 5:
+                        s "\"Okay Valerie...\""
+                    else:
+                        s "\"Sure...\""
+                    gg "Wrong! Paris!"
+
+        label tokyo:
+            if geopoints == 10:
+                v "For once, we're in the running for the lead!"
+                v "It all comes down to this last one."
+                v "Siya and I look at each other with determination in our eyes."
+                v "This will forever decide the fate of our friendship."
+            elif 1 <= geopoints <= 8:
+                v "We've made some mistakes, but I guess we've done worse..."
+                v "We're on the last question, so maybe if everyone else screws up we still have a chance."
+                v "I take a deep breath, waiting for the round to start."
+            else:
+                v "It's so doomed."
+                v "At most we can hope for second last place..."
+                v "Or maybe not. I think we're the only team with 0 points."
+                v "I feel like I should get an award for this."
+                $renpy.notify("Achievement unlocked: GeoGuessr Failure")
+                v "Hey! What was that?!"
+                v "I'm no failure!! Trust me, I'll get this last round perfect."
+            show geoguessr tokyo 
+            window hide
+            $renpy.pause(2.0)
+            window show
+            menu tokyo1:
+                "Hmm, this looks like it's in..."
+
+                "Asia":
+                    v "Yeah, sounds about right."
+                    v "\"How about Asia?\""
+                    if geopoints == 10:
+                        s "\"Yes Valerie!!!! Let's do this!!\""
+                    elif geopoints > 0:
+                        s "\"Yeah, okay...\""
+                    else: 
+                        s "..."
+                    s "\"Where in Asia?\""
+                    menu tokyo2:
+                        "{cps=0}It looks like..."
+
+                        "China":
+                            gg "Wrong! Tokyo!"
+                            if geopoints > 0:
+                                $ geopoints +=1
+                            else:
+                                s "\"Hey! Why did you click that?!\""
+                                s "\"It definitely wasn't going to be there...\""
+                                s "\"I'm never teaming up with you again.\""
+                        
+                        "Japan":
+                            s "!!"
+                            s "\"Okay, I think you're right about that...\""
+                            s "\"But where in Japan?\""
+                            menu tokyo3:
+                                "Kyoto":
+                                    gg "Wrong! Tokyo!"
+                                    $ geopoints += 3
+
+                                "Osaka":
+                                    gg "Wrong! Tokyo!"
+                                    $ geopoints += 3
+
+                                "Tokyo":
+                                    gg "Good job! You were right!"
+                                    $ geopoints += 5
+                                    if geopoints == 5:
+                                        s "\"You know what, I'll forgive you for everything else you've done today!\""
+                                        s "\"At least we got one thing right.\""
+                                    if geopoints == 15:
+                                        $renpy.notify("Achievement unlocked: GeoGuessr Master")
+                                        v "\"YAY!\""
+                                        "Rest of Science Club" "!!"
+                                        v "Siya and I high five each other, proud of our accomplishment."
+                                        v "It seems like just a week ago, we were at each others' throats, but we've finally put aside our differences and achieved the most important goal:"
+                                        v "Beating everyone else at GeoGuessr!"
+                                        v "Albert, Ethan, Matthew..."
+                                        v "They fought valiantly, but none could triumph over the power of true friendship!"
+                                        v "I could die happy now."
+                                        v "But I don't need to, 'cause we won at GeoGuessr!"
+                                    if 15 > geopoints > 5:
+                                        v "We fought valiantly, but ultimately our earlier failures led us to be unable to take the crown."
+                                        v "Still, Siya and I accept our loss gracefully."
+                                        v "Maybe next week we'll get it."
+
+                                "Okinawa":
+                                    gg "Wrong! Tokyo!"
+                                    $ geopoints += 3
+
+                        "India":
+                            gg "Wrong! Tokyo!"
+                            if geopoints > 0:
+                                $ geopoints +=1
+                            else:
+                                s "\"Hey! Why did you click that?!\""
+                                s "\"It definitely wasn't going to be there...\""
+                                s "\"I'm never teaming up with you again.\""
+
+                        "Thailand":
+                            gg "Wrong! Tokyo!"
+                            if geopoints > 0:
+                                $ geopoints +=1
+                            else:
+                                s "\"Hey! Why did you click that?!\""
+                                s "\"It definitely wasn't going to be there...\""
+                                s "\"I'm never teaming up with you again.\""
+
+                        "South Korea":
+                            gg "Wrong! Tokyo!"
+                            if geopoints > 0:
+                                $ geopoints +=1
+                            else:
+                                s "\"Hey! Why did you click that?!\""
+                                s "\"It definitely wasn't going to be there...\""
+                                s "\"I'm never teaming up with you again.\""
+
+                        "Indonesia":
+                            gg "Wrong! Tokyo!"
+                            if geopoints > 0:
+                                $ geopoints +=1
+                            else:
+                                s "\"Hey! Why did you click that?!\""
+                                s "\"It definitely wasn't going to be there...\""
+                                s "\"I'm never teaming up with you again.\""
+
+                "North America":
+                    v "Yeah, sounds about right."
+                    v "\"How about North America?\""
+                    s "???"
+                    if geopoints == 10:
+                        s "\"This sounds stupid, but I'll trust you.\""
+                        gg "Wrong! Tokyo!"
+                    elif geopoints > 0:
+                        s "\"Sure...\""
+                        gg "Wrong! Tokyo!"
+                    else: 
+                        s "\"You know what, I'm not listening to you anymore.\""
+                        s "\"This looks like Asia to me.\""
+                        jump tokyo2
+                    
+                "South America":
+                    v "Yeah, sounds about right."
+                    v "\"How about South America?\""
+                    s "???"
+                    if geopoints == 10:
+                        s "\"This sounds stupid, but I'll trust you.\""
+                        gg "Wrong! Tokyo!"
+                    elif geopoints > 0:
+                        s "\"Sure...\""
+                        gg "Wrong! Tokyo!"
+                    else: 
+                        s "\"You know what, I'm not listening to you anymore.\""
+                        s "\"This looks like Asia to me.\""
+                        jump tokyo2
+
+                "Australia":
+                    v "Yeah, sounds about right."
+                    v "\"How about Australia?\""
+                    s "???"
+                    if geopoints == 10:
+                        s "\"This sounds stupid, but I'll trust you.\""
+                        gg "Wrong! Tokyo!"
+                    elif geopoints > 0:
+                        s "\"Sure...\""
+                        gg "Wrong! Tokyo!"
+                    else: 
+                        s "\"You know what, I'm not listening to you anymore.\""
+                        s "\"This looks like Asia to me.\""
+                        jump tokyo2
+                
+                "Europe":
+                    v "Yeah, sounds about right."
+                    v "\"How about Europe?\""
+                    s "???"
+                    if geopoints == 10:
+                        s "\"This sounds stupid, but I'll trust you.\""
+                        gg "Wrong! Tokyo!"
+                    elif geopoints > 0:
+                        s "\"Sure...\""
+                        gg "Wrong! Tokyo!"
+                    else: 
+                        s "\"You know what, I'm not listening to you anymore.\""
+                        s "\"This looks like Asia to me.\""
+                        jump tokyo2
+                
+                "Africa":
+                    v "Yeah, sounds about right."
+                    v "\"How about Africa?\""
+                    s "???"
+                    if geopoints == 10:
+                        s "\"This sounds stupid, but I'll trust you.\""
+                        gg "Wrong! Tokyo!"
+                    elif geopoints > 0:
+                        s "\"Sure...\""
+                        gg "Wrong! Tokyo!"
+                    else: 
+                        s "\"You know what, I'm not listening to you anymore.\""
+                        s "\"This looks like Asia to me.\""
+                        jump tokyo2
+            
+            if geopoints == 15:
+                v "We take one last moment to bask in our success."
+                v "Then the bell rings, a glorious ending to our delicious triumph."
+                v "I head to tech class with joy in my heart."
+                v "It feels like my every step is lighter."
+                $ Social -= 5
+                $ Physical -= 5
+                $ Mental -= 5
+                call minlimit
+                show screen my_notify(["Social stress -5: " + str(Social), "Physical stress -5: " + str(Physical), "Mental stress -5: " + str(Mental)])
+            elif geopoints == 0:
+                v "It's been a rough time for me and Siya."
+                v "Truth be told, I don't think I've improved at all since the last session."
+                v "But you know what? I'll work on it!!"
+                v "Next week, I'm sure I'll have a magical improvement!"
+            elif 15 > geopoints >= 1:
+                v "Another typical GeoGuessr meeting, I guess."
+                v "One of these days, we'll topple the typical winners and take their places."
+                v "Today isn't that day, but I swear, eventually!"
+            
+            jump techclass
 
     label mathclub:
         $ Mental -= 3
+        call minlimit
         $renpy.notify("Mental stress -3: " + str(Mental))
+        v "Contrary to what you might believe, Math Club can honestly be pretty therapeutic."
+        v "My friends in the older grades are almost always there..."
+        v "And besides helping out the other execs to come up with ideas for the meetings, set up the room, and check peoples' answers to our problems..."
+        v "I don't really have to do much."
+        v "Being an exec of Math Club comes with the added bonus of not being obligated to participate!"
+        v "Because of that, I never have to worry about being pressured to answer a question that I don't know the answer to."
+        v "Cough, Mr. Cross, cough."
+        v "Anyway..."
+        v "Math Club passes without a hitch."
+        v "Some of those Grade 9s are kind of scary."
+        v "But I'm always rooting for the Grade 10s!"
+        v "Today we're doing a speed-round competition in teams."
+        v "Since I helped make the questions, I can't participate..."
+        v "But it is fun watching everyone struggle."
+        v "Speaking of which, one of the questions I helped design is coming up!"
+        v "\"Two different integers are chosen at random from the interval 1-15. What is the probability that their sum is even?\""
+        v "I hate answering questions like these, but it's hilarious when other people have to do it."
+        v "What was the answer again?"
+        menu math:
+            "1/3":
+                v "No, that doesn't sound right..."
+                v "Wasn't it 7/15?"
+            "4/25":
+                v "No, that doesn't sound right..."
+                v "Wasn't it 7/15?"
+            "3/25":
+                v "No, that doesn't sound right..."
+                v "Wasn't it 7/15?"
+            "7/15":
+                $ Mental -= 1
+                call minlimit
+                $renpy.notify(["Mental stress -1: " + str(Mental)])
+        v "Right, that was it."
+        v "Thank goodness... I was worried that someone would check their answer with me, and I wouldn't know."
+        v "That would be really embarrassing, considering that it's my question!"
+        v "I get to thrive off of other people's suffering for the rest of Math Club."
+        v "It's very nice. I enjoy it immensely."
+        v "Eventually, the bell rings. Time for tech class!"
 
     label tech: 
         $ techflags += 1
@@ -920,13 +1297,13 @@ label start:
         v "And while he might have a point there, I want to work on what I enjoy!"
         v "So I work away until the bell rings, content with the progress I've made."
         
-        jump techclassgood
+        jump techclass
 
-    
     label nap:
         $ Mental -=5
         $ Physical -= 5
         $ Social += 5
+        call minlimit
         show screen my_notify(["Social stress +5: " + str(Social), "Mental stress -5: " + str(Mental), "Physical stress -5: " + str(Physical)])
         v "Yawn..."
         v "I deserve a good nap."
@@ -960,15 +1337,41 @@ label start:
         v "Still, I hurriedly throw my things into my bag, not bothering to zip it up before I dash out of the library."
         v "Hopefully I didn't leave anything behind."
 
-        
+    label techclass:
+        ## Checkpoint: your stats at this point determine what branch of tech class you'll go through. 
+        if Social > 20 and Mental > 18 and Physical > 25:
+            jump techclassbad
+        elif Social < 12 and Mental < 12 and Physical < 12:
+            jump techclassgood
+        else:
+            jump techclassneutral
+
+    label techclassbad:
+        v "Well, it's definitely been an experience getting here."
+        v "That was an interesting lunch period."
+        v "However, any magic that was cast on me during lunch has long worn off."
+        v "I don't know what it is, but I'm just not in a very good mood, huh."
+        v "To be fair, it hasn't been my ideal day."
+        if late and sick:
+            v "Being late, being sick first thing in the morning..."
+        elif sick:
+            v "Being sick first thing in the morning..."
+        v "Now that we're at the middle of the day, it's really striking me just how tired I am."
+        v "It's not even entirely about how much sleep I've gotten."
+        v "Just... physically, emotionally, and mentally..."
+        v "As I take my seat at my assigned desk, a heavy weariness settles upon me."
+        v "Man."
+        v "It's pretty important that I work on my tech project..."
+        v "But I'm just not feeling all that motivated."
+        v ""
 
     label techclassgood:
-        v ""
+        v "Well, it's definitely been an experience getting here."
+        v "That was an interesting lunch period."
 
     label techclassneutral:
 
-    label techclassbad:
-                    
+    
 
 
 
