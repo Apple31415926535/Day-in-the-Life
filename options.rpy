@@ -29,7 +29,36 @@ define config.version = "1.0"
 ## Text that is placed on the game's about screen. Place the text between the
 ## triple-quotes, and leave a blank line between paragraphs.
 
-define gui.about = _p("""
+define gui.about = ("""
+GUI features for PC have all been painstakingly edited, recoloured, redrawn, or fully recreated by Valerie. Please acknowledge and appreciate her efforts.
+
+Music from Uppbeat:
+{a=https://uppbeat.io/t/yokonap/airplane-mode}Main Menu{/a} (Airplane Mode, Yokonap)
+{a=https://uppbeat.io/t/ra/cold-brew}Main Game{/a} (Cold Brew, RA)
+
+Sound effects:
+{a=https://freesound.org/people/kwahmah_02/sounds/250629/}Alarm Clock{/a} (kwahmah_02)
+{a=https://pixabay.com/sound-effects/analog-appliance-button-10-185285/}Button click SFX{/a} (floraphonic)
+{a=https://pixabay.com/sound-effects/light-switch-81967/}Light switch SFX{/a} (Pixabay)
+{a=https://pixabay.com/sound-effects/cellphone-ringing-6475/}Phone ringing SFX{/a} (Pixabay)
+
+Images:
+{a=https://www.geoguessr.com/}GeoGuessr screenshots{/a}
+{a=https://hips.hearstapps.com/hmg-prod/images/ghk010121homefeature-008-1671137680.png}Bedroom{/a}
+{a=https://cut2size.ca/uploads/system_files/small_kitchen_layout_ideas.jpeg}Kitchen{/a}
+{a=https://cars.usnews.com/cars-trucks/advice/brands-with-the-nicest-interiors}Car{/a}
+{a=https://www.sercoconstruction.ca/projects/kingston-secondary-school-module-vanier}Library and atrium backgrounds{/a}
+{a=https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.limestone.on.ca%2Fboard%2Fnew_school__kingston_secondary_school&psig=AOvVaw0On-BHkVxdP2DI26Jgtnpw&ust=1706234852884000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPiZyqa694MDFQAAAAAdAAAAABAD}School building background{/a}
+{a=https://globalnews.ca/news/7299049/kingston-secondary-schools-octomester/}History classroom background{/a}
+{a=https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.teachhub.com%2Fclassroom-management%2F2019%2F05%2Fclassroom-management-for-an-effective-learning-environment%2F&psig=AOvVaw0WypgxfaZN4FgRE6jH3hhI&ust=1706235013973000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMiO7PG694MDFQAAAAAdAAAAABAD}Science classroom background{/a}
+{a=https://www.primarisreit.com/system/attachments/1062/original/_DSC3717.jpg?1619722057}Mall{/a}
+{a=https://www.greenbiz.com/sites/default/files/styles/og_image_1200x630/public/2020-10/chicago_citybus_stock.jpg?itok=L-k33qIv}City bus{/a}
+{a=https://upload.wikimedia.org/wikipedia/commons/9/9e/Interior_school_bus.jpg}School bus{/a}
+{a=https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cprcertified.com%2Fblog%2Fstuck-outside-in-winter-first-aid-tips-for-cold-weather-survival&psig=AOvVaw2zwA6jUm1z5cATw6L9xepC&ust=1706324647284000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCKDy7-mI-oMDFQAAAAAdAAAAABAI}Outside winter{/a}
+{a=https://www.google.com/url?sa=i&url=https%3A%2F%2Fca.linkedin.com%2Fin%2Fluke-delva-b914aa75&psig=AOvVaw197kWXUmksl8q1gu29F8Q4&ust=1706325790647000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCNipkYeN-oMDFQAAAAAdAAAAABAD}Luke Delva{/a}
+{a=https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.hgtv.com%2Fdesign%2Frooms%2Fliving-and-dining-rooms%2F15-almost-free-living-room-updates-pictures&psig=AOvVaw0HJzEV_ZQcg7EIAFGgOoKr&ust=1706325818574000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCJDatZSN-oMDFQAAAAAdAAAAABAE}Living room{/a}
+{a=https://ifaketextmessage.com/}Text conversations{/a}
+
 """)
 
 
@@ -78,7 +107,7 @@ define config.exit_transition = fade
 
 ## Between screens of the game menu.
 
-define config.intra_transition = dissolve
+define config.intra_transition = fade
 
 
 ## A transition that is used after a game has been loaded.
@@ -118,7 +147,7 @@ define config.window_hide_transition = Dissolve(.2)
 
 ## Controls the default text speed. The default, 0, is infinite, while any other
 ## number is the number of characters per second to type out.
-
+## Edited
 default preferences.text_cps = 75
 
 
